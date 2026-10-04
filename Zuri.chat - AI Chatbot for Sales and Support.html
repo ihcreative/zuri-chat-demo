@@ -1,0 +1,2435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Zuri.chat - AI Chatbot for Sales and Support</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0f0f1e;
+      --bg-secondary: #1a1a2e;
+      --purple: #7c3aed;
+      --purple-dark: #5b21b6;
+      --purple-light: #a78bfa;
+      --text: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.6);
+      --text-tertiary: rgba(255, 255, 255, 0.4);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-light: rgba(255, 255, 255, 0.12);
+      --safe-top: env(safe-area-inset-top, 0px);
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      padding-top: var(--safe-top);
+    }
+
+    /* ===== LANDING PAGE ===== */
+    #landingPage {
+      display: block;
+    }
+
+    #landingPage.hidden {
+      display: none;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(15, 15, 30, 0.7);
+      backdrop-filter: blur(30px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .logo {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      background: linear-gradient(135deg, #c4b5fd 0%, var(--purple) 50%, var(--purple-dark) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      transition: transform 0.2s;
+    }
+
+    .logo:hover {
+      transform: scale(1.02);
+    }
+
+    nav {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    nav a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      position: relative;
+    }
+
+    nav a:hover {
+      color: var(--text);
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      background: var(--purple);
+      color: var(--text);
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
+    }
+
+    .nav-btn:hover {
+      background: var(--purple-light);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.3);
+    }
+
+    .nav-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 80px 20px 100px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(124, 58, 237, 0.15) 0%, rgba(76, 29, 149, 0.1) 50%, transparent 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(30px, -30px); }
+    }
+
+    .hero h1 {
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      letter-spacing: -1.5px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 40px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-primary {
+      padding: 14px 32px;
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+      color: var(--text);
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(124, 58, 237, 0.35);
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-secondary {
+      padding: 14px 32px;
+      background: transparent;
+      border: 1.5px solid var(--purple);
+      color: var(--purple-light);
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(124, 58, 237, 0.12);
+      border-color: var(--purple-light);
+      transform: translateY(-3px);
+    }
+
+    /* Section */
+    section {
+      padding: 80px 20px;
+      transition: all 0.3s ease;
+    }
+
+    .section-title {
+      font-size: 42px;
+      font-weight: 700;
+      margin-bottom: 50px;
+      text-align: center;
+      letter-spacing: -1px;
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    /* Product Showcase */
+    .product-showcase {
+      padding: 80px 20px;
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 450px;
+    }
+
+    .product-visual {
+      max-width: 600px;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(59, 7, 100, 0.08));
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .product-visual h3 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    /* Testimonials */
+    .testimonials {
+      background: var(--bg);
+    }
+
+    .testimonials-grid {
+      max-width: 960px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .testimonial {
+      padding: 32px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: all 0.3s;
+    }
+
+    .testimonial:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border-light);
+    }
+
+    .testimonial-stars {
+      font-size: 16px;
+      margin-bottom: 16px;
+      color: var(--purple-light);
+    }
+
+    .testimonial-text {
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 20px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .testimonial-author {
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+
+    .author-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .author-title {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .product-visual p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .mock-chat {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .mock-msg {
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .mock-msg.bot {
+      background: rgba(124, 58, 237, 0.25);
+      color: var(--text);
+      text-align: left;
+      max-width: 75%;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+    }
+
+    .mock-msg.user {
+      background: var(--purple);
+      color: var(--text);
+      text-align: right;
+      align-self: flex-end;
+      max-width: 75%;
+      font-weight: 500;
+    }
+
+    /* Pricing */
+    .pricing {
+      background: var(--bg-secondary);
+    }
+
+    .pricing-grid {
+      max-width: 960px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .price-card {
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .price-card:hover {
+      border-color: var(--border-light);
+      background: rgba(255, 255, 255, 0.04);
+      transform: translateY(-6px);
+    }
+
+    .price-card.featured {
+      border: 1.5px solid var(--purple);
+      background: rgba(124, 58, 237, 0.08);
+      transform: scale(1.02);
+    }
+
+    .price-card.featured:hover {
+      transform: scale(1.04) translateY(-8px);
+    }
+
+    .price-name {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 14px;
+      letter-spacing: -0.3px;
+    }
+
+    .price-amount {
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--purple-light);
+      margin-bottom: 10px;
+      letter-spacing: -1px;
+    }
+
+    .price-amount small {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    .price-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .price-features {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .price-feature {
+      font-size: 13px;
+      color: var(--text-secondary);
+      padding-left: 24px;
+      position: relative;
+    }
+
+    .price-feature:before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--purple-light);
+      font-weight: 700;
+    }
+
+    /* Final CTA */
+    .final-cta {
+      background: linear-gradient(135deg, #4c1d95 0%, #5e1ba9 50%, #3b0764 100%);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .final-cta h2 {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .final-cta p {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    footer {
+      padding: 40px 20px;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* ===== APP PAGE ===== */
+    #appPage {
+      display: none;
+      width: 100%;
+    }
+
+    #appPage.active {
+      display: block;
+    }
+
+    .app-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 100;
+    }
+
+    .app-header-logo {
+      font-size: 18px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #c4b5fd 0%, var(--purple) 50%, var(--purple-dark) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .back-btn {
+      padding: 9px 18px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .progress-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border-light);
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .progress-dot.active {
+      background: var(--purple);
+      width: 10px;
+      height: 10px;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+    }
+
+    .progress-dot.completed {
+      background: #4ade80;
+    }
+
+    .back-btn:hover {
+      border-color: var(--purple);
+      color: var(--purple);
+    }
+
+    .app-container {
+      width: 100%;
+      padding: 40px 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .input-section {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .input-section h2 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .input-section p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .url-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .url-input {
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      font-size: 15px;
+      transition: all 0.3s;
+    }
+
+    .url-input:focus {
+      outline: none;
+      border-color: var(--purple);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+    }
+
+    .url-input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .btn-analyze {
+      padding: 16px 24px;
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+      color: var(--text);
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.2);
+      width: 100%;
+    }
+
+    .btn-analyze:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(124, 58, 237, 0.3);
+    }
+
+    .status-list {
+      display: none;
+      margin-top: 24px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .status-list.active {
+      display: block;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      color: var(--text-secondary);
+      animation: slideIn 0.3s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .status-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .status-icon.done {
+      color: #4ade80;
+    }
+
+    .status-icon.loading {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes scaleIn {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Chat */
+    .chat-section {
+      display: none;
+    }
+
+    .chat-section.active {
+      display: block;
+    }
+
+    .chat-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      height: 400px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chat-bubble {
+      padding: 0;
+      border-radius: 0;
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 80%;
+      animation: bubbleIn 0.3s ease;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    @keyframes bubbleIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chat-bubble.bot {
+      align-self: flex-start;
+    }
+
+    .bot-avatar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e40af, #059669);
+      color: white;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .bot-message-text {
+      background: linear-gradient(135deg, rgba(30, 64, 175, 0.15), rgba(5, 150, 105, 0.15));
+      border: 1px solid rgba(30, 64, 175, 0.3);
+      padding: 12px 16px;
+      border-radius: 12px;
+      color: var(--text);
+    }
+
+    .chat-bubble.user {
+      background: #64748b;
+      color: white;
+      border: none;
+      align-self: flex-end;
+      font-weight: 500;
+      padding: 12px 16px;
+      border-radius: 12px;
+      display: block;
+    }
+
+    .chat-input-group {
+      display: flex;
+      gap: 8px;
+      padding: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .chat-input:focus {
+      outline: none;
+      border-color: var(--purple);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .chat-input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .btn-send {
+      padding: 12px 20px;
+      background: var(--purple);
+      color: var(--text);
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-send:hover {
+      background: var(--purple-light);
+    }
+
+    /* Deploy */
+    .btn-deploy {
+      padding: 14px 24px;
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+      color: var(--text);
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 100%;
+      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.2);
+    }
+
+    .btn-deploy:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Stripe Modal */
+    .stripe-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .stripe-modal.active {
+      display: flex;
+    }
+
+    .stripe-modal-content {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .stripe-logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--purple);
+      margin-bottom: 24px;
+      letter-spacing: 1px;
+    }
+
+    .stripe-amount {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .stripe-description {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+
+    .stripe-btn {
+      padding: 14px 24px;
+      background: #5469d4;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s;
+      margin-bottom: 12px;
+    }
+
+    .stripe-btn:hover {
+      background: #4060c5;
+    }
+
+    .stripe-close {
+      font-size: 12px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* Success Modal */
+    .success-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .success-modal.active {
+      display: flex;
+    }
+
+    .success-content {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .success-check {
+      font-size: 48px;
+      color: #4ade80;
+      margin-bottom: 20px;
+    }
+
+    .success-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .success-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .success-btn {
+      padding: 12px 24px;
+      background: var(--purple);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .success-btn:hover {
+      background: var(--purple-light);
+    }
+
+    /* Responsive */
+    @media (min-width: 768px) {
+      .hero {
+        padding: 100px 40px 120px;
+      }
+
+      .hero h1 {
+        font-size: 56px;
+      }
+
+      .hero p {
+        font-size: 20px;
+      }
+
+      .hero-actions {
+        flex-direction: row;
+        gap: 20px;
+        align-items: flex-start;
+        justify-content: center;
+      }
+
+      section {
+        padding: 100px 40px;
+      }
+
+      .pricing-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LANDING PAGE -->
+  <div id="landingPage">
+    <header>
+      <div class="logo">ZURI</div>
+      <nav>
+        <a onclick="smoothScroll('pricing')">Pricing</a>
+        <button class="nav-btn" onclick="loginToDashboard()">Sign In</button>
+        <button class="nav-btn" onclick="goToApp()">Build Your Bot Free</button>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <h1>Let us turn your conversations into revenue.</h1>
+      <p>Stop losing leads while you sleep. Zuri captures and qualifies every customer inquiry 24/7 on WhatsApp, your website, and every channel. Never miss a sale again.</p>
+      <div class="hero-actions">
+        <div>
+          <button class="btn-primary" onclick="goToApp()">Build Your Bot Free</button>
+          <div style="font-size: 12px; color: rgba(255, 255, 255, 0.6); margin-top: 8px; text-align: center;">No credit card required • Takes 5 minutes</div>
+        </div>
+        <button class="btn-secondary" onclick="smoothScroll('pricing')">View Pricing</button>
+      </div>
+    </section>
+
+    <section class="testimonials">
+      <h2 class="section-title">Trusted by SMBs everywhere.</h2>
+      <div class="testimonials-grid">
+        <div class="testimonial">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Zuri captured 14 leads in our first week while we were closed for the holiday. Best $100 we've spent."</p>
+          <div class="testimonial-author">
+            <div class="author-name">Marcus Jefferson</div>
+            <div class="author-title">Owner, The Jeffersons Laundromat</div>
+          </div>
+        </div>
+        <div class="testimonial">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Our support team went from drowning in messages to handling only complex issues. It pays for itself every week."</p>
+          <div class="testimonial-author">
+            <div class="author-name">Dr. Sarah Jenkins</div>
+            <div class="author-title">Founder, Jenkins Family Dental</div>
+          </div>
+        </div>
+        <div class="testimonial">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Setup took 3 minutes. No code. No technical team needed. It just works."</p>
+          <div class="testimonial-author">
+            <div class="author-name">James Park</div>
+            <div class="author-title">Manager, Park HVAC Services</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="padding: 80px 20px; background: rgba(124, 58, 237, 0.08); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+      <div style="width: 100%; max-width: 1000px; margin: 0 auto;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
+          <div>
+            <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 24px; letter-spacing: -0.3px;">Enterprise security. Built in.</h3>
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <div style="color: #4ade80; font-weight: 700; flex-shrink: 0;">✓</div>
+                <div style="font-size: 14px; color: var(--text-secondary);">SOC 2 Type II certified</div>
+              </div>
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <div style="color: #4ade80; font-weight: 700; flex-shrink: 0;">✓</div>
+                <div style="font-size: 14px; color: var(--text-secondary);">GDPR compliant</div>
+              </div>
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <div style="color: #4ade80; font-weight: 700; flex-shrink: 0;">✓</div>
+                <div style="font-size: 14px; color: var(--text-secondary);">End-to-end encrypted</div>
+              </div>
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <div style="color: #4ade80; font-weight: 700; flex-shrink: 0;">✓</div>
+                <div style="font-size: 14px; color: var(--text-secondary);">99.99% uptime SLA</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 24px; letter-spacing: -0.3px;">Works with your stack.</h3>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+              <div style="padding: 16px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 8px; text-align: center; font-size: 12px; color: var(--text-secondary); font-weight: 500;">Zendesk</div>
+              <div style="padding: 16px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 8px; text-align: center; font-size: 12px; color: var(--text-secondary); font-weight: 500;">Slack</div>
+              <div style="padding: 16px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 8px; text-align: center; font-size: 12px; color: var(--text-secondary); font-weight: 500;">HubSpot</div>
+              <div style="padding: 16px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 8px; text-align: center; font-size: 12px; color: var(--text-secondary); font-weight: 500;">Zapier</div>
+              <div style="padding: 16px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 8px; text-align: center; font-size: 12px; color: var(--text-secondary); font-weight: 500;">Google Sheets</div>
+              <div style="padding: 16px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 8px; text-align: center; font-size: 12px; color: var(--text-secondary); font-weight: 500;">+ 50 more</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+      <h2 class="section-title">Simple pricing.</h2>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-name">Lite</div>
+          <div class="price-amount">Free</div>
+          <div class="price-desc">Up to 1,000 monthly active users.</div>
+          <div class="price-features">
+            <div class="price-feature">1 bot</div>
+            <div class="price-feature">Basic templates</div>
+            <div class="price-feature">Email support</div>
+          </div>
+          <button class="btn-primary" onclick="goToApp()" style="width: 100%; margin-top: 28px;">Start Free</button>
+        </div>
+        <div class="price-card featured">
+          <div class="price-name">Standard</div>
+          <div class="price-amount">$49<small>/month</small></div>
+          <div class="price-desc">1,000+ monthly active users.</div>
+          <div class="price-features">
+            <div class="price-feature">Unlimited bots</div>
+            <div class="price-feature">Omnichannel</div>
+            <div class="price-feature">Custom training</div>
+            <div class="price-feature">24/7 support</div>
+          </div>
+          <button class="btn-primary" onclick="goToApp()" style="width: 100%; margin-top: 28px;">Start Free Trial</button>
+        </div>
+        <div class="price-card">
+          <div class="price-name">Enterprise</div>
+          <div class="price-amount">Custom</div>
+          <div class="price-desc">50,000+ users. Custom integrations.</div>
+          <div class="price-features">
+            <div class="price-feature">Everything in Standard</div>
+            <div class="price-feature">Custom UI</div>
+            <div class="price-feature">Dedicated manager</div>
+            <div class="price-feature">SLA guarantee</div>
+          </div>
+          <button class="btn-primary" onclick="goToApp()" style="width: 100%; margin-top: 28px;">Talk to Sales</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <div style="max-width: 1200px; margin: 0 auto;">
+        <h2 style="margin-bottom: 60px;">Your leads are leaving. Zuri keeps them.</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-bottom: 60px;">
+          <!-- Left: Without Zuri -->
+          <div>
+            <div style="padding: 40px 32px; background: rgba(0, 0, 0, 0.3); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08); position: relative;">
+              <div style="position: absolute; top: -40px; left: 32px; font-size: 12px; font-weight: 700; color: rgba(255, 100, 100, 0.9); text-transform: uppercase; letter-spacing: 0.5px;">Without Zuri</div>
+              
+              <!-- Customer message -->
+              <div style="display: flex; gap: 12px; margin-bottom: 20px; align-items: flex-start;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 100, 100, 0.2); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">👤</div>
+                <div style="flex: 1;">
+                  <div style="background: rgba(255, 255, 255, 0.08); padding: 12px 16px; border-radius: 12px; font-size: 13px; color: var(--text); border-left: 2px solid rgba(255, 100, 100, 0.5);">Hi, do you have availability tomorrow?</div>
+                  <div style="font-size: 12px; color: var(--text-secondary); margin-top: 6px;">11:47 PM</div>
+                </div>
+              </div>
+
+              <!-- Silence -->
+              <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 12px; color: var(--text-secondary); padding: 16px; border-top: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">No response. You're offline.</div>
+              </div>
+
+              <!-- Follow-up from customer -->
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 100, 100, 0.2); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">👤</div>
+                <div style="flex: 1;">
+                  <div style="background: rgba(255, 255, 255, 0.08); padding: 12px 16px; border-radius: 12px; font-size: 13px; color: var(--text); border-left: 2px solid rgba(255, 100, 100, 0.5);">Hey, sorry I found someone else. I needed help and you weren't available.</div>
+                  <div style="font-size: 12px; color: var(--text-secondary); margin-top: 6px;">3 days later</div>
+                </div>
+              </div>
+
+              <!-- Bullet points -->
+              <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">What happens:</div>
+                <ul style="list-style: none; padding: 0; font-size: 13px; color: var(--text); line-height: 1.8;">
+                  <li style="margin-bottom: 6px;">• Lead arrives while you sleep</li>
+                  <li style="margin-bottom: 6px;">• Message sits unread for hours</li>
+                  <li>• Customer chooses your competitor</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: With Zuri -->
+          <div>
+            <div style="padding: 40px 32px; background: rgba(124, 58, 237, 0.12); border-radius: 16px; border: 1px solid rgba(124, 58, 237, 0.4); position: relative;">
+              <div style="position: absolute; top: -40px; left: 32px; font-size: 12px; font-weight: 700; color: var(--purple-light); text-transform: uppercase; letter-spacing: 0.5px;">With Zuri</div>
+              
+              <!-- Customer message -->
+              <div style="display: flex; gap: 12px; margin-bottom: 20px; align-items: flex-start;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 100, 100, 0.2); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">👤</div>
+                <div style="flex: 1;">
+                  <div style="background: rgba(255, 255, 255, 0.08); padding: 12px 16px; border-radius: 12px; font-size: 13px; color: var(--text); border-left: 2px solid var(--purple-light);">Hi, do you have availability tomorrow?</div>
+                  <div style="font-size: 12px; color: var(--text-secondary); margin-top: 6px;">11:47 PM</div>
+                </div>
+              </div>
+
+              <!-- Zuri response -->
+              <div style="display: flex; gap: 12px; margin-bottom: 20px; align-items: flex-start; flex-direction: row-reverse;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--purple); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; font-weight: 700; color: white;">Z</div>
+                <div style="flex: 1; text-align: right;">
+                  <div style="background: var(--purple); padding: 12px 16px; border-radius: 12px; font-size: 13px; color: white; display: inline-block;">Yes! We have 10am or 2pm. Which works best?</div>
+                  <div style="font-size: 12px; color: var(--text-secondary); margin-top: 6px;">11:47 PM</div>
+                </div>
+              </div>
+
+              <!-- Customer books -->
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 100, 100, 0.2); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">👤</div>
+                <div style="flex: 1;">
+                  <div style="background: rgba(255, 255, 255, 0.08); padding: 12px 16px; border-radius: 12px; font-size: 13px; color: white; border-left: 2px solid var(--purple-light);">10am works perfect. See you then!</div>
+                  <div style="font-size: 12px; color: var(--text-secondary); margin-top: 6px;">11:48 PM</div>
+                </div>
+              </div>
+
+              <!-- Success badge -->
+              <div style="margin-top: 20px; padding: 12px 16px; background: rgba(74, 222, 128, 0.2); border-radius: 8px; text-align: center; font-size: 12px; color: #4ade80; font-weight: 600; border: 1px solid rgba(74, 222, 128, 0.3);">✓ Lead qualified. Appointment booked.</div>
+
+              <!-- Bullet points -->
+              <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">What happens:</div>
+                <ul style="list-style: none; padding: 0; font-size: 13px; color: var(--text); line-height: 1.8;">
+                  <li style="margin-bottom: 6px;">• Lead arrives. Instant response.</li>
+                  <li style="margin-bottom: 6px;">• Zuri qualifies and books time</li>
+                  <li>• You show up. Customer is ready.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 60px;">
+          <p style="font-size: 16px; color: rgba(255, 255, 255, 0.8); margin-bottom: 32px;">Your leads don't wait for business hours. Neither does Zuri.</p>
+          <div style="text-align: center;">
+            <button class="btn-primary" onclick="goToApp()" style="font-size: 16px; padding: 16px 40px;">Build Your Bot Free</button>
+            <div style="font-size: 12px; color: rgba(255, 255, 255, 0.6); margin-top: 8px;">No credit card required • Takes 5 minutes</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border); margin-bottom: 40px;">
+        <div>
+          <div class="logo" style="margin-bottom: 16px; font-size: 16px;">ZURI</div>
+          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">Your 24/7 team trained on your business.</p>
+          <div style="padding: 12px 14px; background: rgba(124, 58, 237, 0.15); border: 1px solid rgba(124, 58, 237, 0.4); border-radius: 8px; width: fit-content;">
+            <div style="font-weight: 600; color: var(--purple-light); font-size: 12px; line-height: 1.4;">AI that never sleeps.<br>Sales that never stop.</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-weight: 600; margin-bottom: 12px; font-size: 13px;">Product</div>
+          <ul style="list-style: none; font-size: 13px;">
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-secondary); text-decoration: none;">Features</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-secondary); text-decoration: none;">Pricing</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-secondary); text-decoration: none;">Security</a></li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-weight: 600; margin-bottom: 12px; font-size: 13px;">Company</div>
+          <ul style="list-style: none; font-size: 13px;">
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-secondary); text-decoration: none;">About</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-secondary); text-decoration: none;">Blog</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-secondary); text-decoration: none;">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-weight: 600; margin-bottom: 12px; font-size: 13px;">Connect</div>
+          <ul style="list-style: none; font-size: 13px;">
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-secondary); text-decoration: none;">Twitter</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-secondary); text-decoration: none;">LinkedIn</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-secondary); text-decoration: none;">Discord</a></li>
+          </ul>
+        </div>
+      </div>
+      <div style="text-align: center; font-size: 12px; color: var(--text-secondary);">
+        <p style="margin-bottom: 8px;">© 2026 Zuri.chat. Powering AI for everyone, no code required.</p>
+        <p><a href="#" style="color: var(--text-secondary); text-decoration: none; margin-right: 16px;">Privacy</a><a href="#" style="color: var(--text-secondary); text-decoration: none;">Terms</a></p>
+      </div>
+    </footer>
+
+    <!-- Landing Page Help Widget -->
+    <div id="landingHelpWidget" style="position: fixed; bottom: 20px; right: 20px; z-index: 500;">
+      <button onclick="toggleLandingHelp()" style="width: 56px; height: 56px; border-radius: 50%; background: var(--purple); color: white; border: none; font-size: 20px; cursor: pointer; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3); transition: all 0.2s;">💬</button>
+      <div id="landingHelpChat" style="display: none; position: absolute; bottom: 80px; right: 0; width: 320px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 12px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); padding: 16px; z-index: 501;">
+        <div style="margin-bottom: 12px; font-weight: 600; font-size: 14px;">Questions?</div>
+        <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">Quick answers about Zuri</div>
+        <button onclick="askLandingHelp('What\'s included in Standard?')" style="width: 100%; padding: 8px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 6px; color: var(--text-secondary); font-size: 12px; cursor: pointer; margin-bottom: 8px; text-align: left;">What's included in Standard?</button>
+        <button onclick="askLandingHelp('How long does setup take?')" style="width: 100%; padding: 8px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 6px; color: var(--text-secondary); font-size: 12px; cursor: pointer;">How long does setup take?</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stripe Checkout Modal -->
+  <div id="stripeModal" class="stripe-modal">
+    <div class="stripe-modal-content">
+      <div class="stripe-logo">Stripe</div>
+      <div class="stripe-amount">$100.00</div>
+      <div class="stripe-description">14-day free trial, then $100/month</div>
+      <button class="stripe-btn" onclick="processPayment()">Pay with Card</button>
+      <div class="stripe-close" onclick="closeStripe()">Cancel</div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div id="successModal" class="success-modal">
+    <div class="success-content">
+      <div class="success-check">✓</div>
+      <div class="success-title">Welcome to Zuri!</div>
+      <div class="success-text">Your bot is live and ready to capture leads 24/7.</div>
+      <button class="success-btn" onclick="goBackToLanding()">Back to Home</button>
+    </div>
+  </div>
+
+  <!-- APP PAGE -->
+  <div id="appPage">
+    <div id="appHeader" class="app-header">
+      <div class="app-header-logo">ZURI</div>
+      <div style="display: flex; gap: 24px; align-items: center; flex: 1; justify-content: center;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="font-size: 12px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Setup Flow</div>
+          <div id="progressDots" style="display: flex; gap: 6px; align-items: center;">
+            <div class="progress-dot active" data-stage="1"></div>
+            <div class="progress-dot" data-stage="3"></div>
+            <div class="progress-dot" data-stage="4"></div>
+            <div class="progress-dot" data-stage="5"></div>
+            <div class="progress-dot" data-stage="5b"></div>
+            <div class="progress-dot" data-stage="7"></div>
+            <div class="progress-dot" data-stage="6a-6b"></div>
+            <div class="progress-dot" data-stage="8"></div>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <button id="flowHelpBtn" onclick="toggleFlowHelp()" style="background: none; border: none; color: var(--purple-light); font-size: 18px; cursor: pointer; padding: 8px;">?</button>
+        <button id="exitBtn" class="back-btn" onclick="goBackToLanding()">Exit</button>
+        <button id="settingsBtn" onclick="alert('Settings coming soon')" style="display: none; padding: 8px 12px; background: transparent; border: 1px solid var(--border-light); border-radius: 6px; color: var(--text-secondary); cursor: pointer; font-size: 13px;">⚙️ Settings</button>
+        <button id="logoutBtn" onclick="goBackToLanding()" style="display: none; padding: 8px 12px; background: transparent; border: 1px solid var(--border-light); border-radius: 6px; color: var(--text-secondary); cursor: pointer; font-size: 13px;">Logout</button>
+      </div>
+    </div>
+
+    <!-- Flow Help Panel -->
+    <div id="flowHelpPanel" style="display: none; background: var(--bg-secondary); border-bottom: 1px solid var(--border-light); padding: 16px 20px; margin-bottom: 24px;">
+      <div style="max-width: 900px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+          <div style="font-weight: 600; font-size: 14px;">Need help with this step?</div>
+          <button onclick="toggleFlowHelp()" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 16px;">×</button>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <button onclick="showFlowHelp('What is this step for?')" style="padding: 8px 12px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.2); border-radius: 6px; color: var(--text-secondary); font-size: 12px; cursor: pointer; text-align: left;">What is this step for?</button>
+          <button onclick="showFlowHelp('Can I skip this?')" style="padding: 8px 12px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.2); border-radius: 6px; color: var(--text-secondary); font-size: 12px; cursor: pointer; text-align: left;">Can I skip this?</button>
+          <button onclick="showFlowHelp('What happens next?')" style="padding: 8px 12px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.2); border-radius: 6px; color: var(--text-secondary); font-size: 12px; cursor: pointer; text-align: left;">What happens next?</button>
+          <button onclick="showFlowHelp('Talk to support')" style="padding: 8px 12px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.2); border-radius: 6px; color: var(--text-secondary); font-size: 12px; cursor: pointer; text-align: left;">Talk to support</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-container">
+      <!-- STAGE 1: Ingestion -->
+      <div id="stage1" class="stage-container">
+        <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 24px;">
+          <div style="font-size: 12px; color: var(--text-secondary); background: rgba(124, 58, 237, 0.1); padding: 6px 12px; border-radius: 4px;">Step 1 of 7</div>
+        </div>
+        <h2 style="margin-bottom: 16px;">Enter your website.</h2>
+        <p style="margin-bottom: 48px; font-size: 16px; color: var(--text-secondary);">We'll analyze your site and create your bot in seconds.</p>
+        <div class="url-input-group">
+          <input id="urlInput" type="text" class="url-input" placeholder="yoursite.com" value="jeffersonscleaners.com" />
+          <button class="btn-analyze" onclick="startAnalysis()">Analyze & Continue</button>
+        </div>
+      </div>
+
+      <!-- STAGE 2: Scraper Animation -->
+      <div id="stage2" class="stage-container" style="display: none;">
+        <h2>Analyzing your website...</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 40px;">This usually takes 30-60 seconds.</p>
+        
+        <div id="statusList" class="status-list" style="display: flex; flex-direction: column; gap: 20px;">
+          <div class="status-item" style="padding: 16px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 8px; display: flex; gap: 12px; align-items: center;">
+            <div style="width: 32px; height: 32px; border: 3px solid rgba(124, 58, 237, 0.3); border-top-color: #7c3aed; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+            <span style="color: var(--text-secondary);">Scanning brand colors</span>
+          </div>
+          <div class="status-item" style="padding: 16px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 8px; display: flex; gap: 12px; align-items: center;">
+            <div id="status2-icon" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #a78bfa; font-weight: 700;">⋯</div>
+            <span id="status2-text" style="color: var(--text-secondary);">Extracting tone & voice</span>
+          </div>
+          <div class="status-item" style="padding: 16px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 8px; display: flex; gap: 12px; align-items: center;">
+            <div id="status3-icon" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #a78bfa; font-weight: 700;">⋯</div>
+            <span id="status3-text" style="color: var(--text-secondary);">Building your bot</span>
+          </div>
+        </div>
+
+        <style>
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        </style>
+      </div>
+
+      <!-- STAGE 3: Extracted Branding Review -->
+      <div id="stage3" class="stage-container" style="display: none;">
+        <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 24px;">
+          <div style="font-size: 12px; color: var(--text-secondary); background: rgba(124, 58, 237, 0.1); padding: 6px 12px; border-radius: 4px;">Step 2 of 7</div>
+        </div>
+        <h2>We've analyzed your site.</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 48px; font-size: 14px;">Here's what we found. You can edit anything below, or keep the defaults.</p>
+        
+        <!-- Bot Identity: Logo or Initials -->
+        <div style="margin-bottom: 56px;">
+          <div style="font-weight: 600; margin-bottom: 20px; font-size: 13px;">Bot Avatar</div>
+          <div style="display: flex; gap: 32px; align-items: flex-start;">
+            <!-- Logo Option -->
+            <label style="display: flex; flex-direction: column; gap: 12px; cursor: pointer;">
+              <div style="font-size: 12px; color: var(--text-secondary); font-weight: 500;">Your Company Logo</div>
+              <div id="logoOption" onclick="updateBotIdentity('logo')" style="width: 100px; height: 100px; border: 2px solid var(--border-light); border-radius: 16px; display: flex; align-items: center; justify-content: center; background: white; cursor: pointer; transition: all 0.2s; padding: 12px;">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="#059669" stroke-width="2"/>
+                  <text x="50" y="60" font-size="32" font-weight="bold" text-anchor="middle" fill="#059669" font-family="Arial">JC</text>
+                </svg>
+              </div>
+              <input type="radio" name="botIdentity" value="logo" checked onchange="updateBotIdentity('logo')" style="cursor: pointer;" />
+            </label>
+
+            <!-- Initials Option -->
+            <label style="display: flex; flex-direction: column; gap: 12px; cursor: pointer;">
+              <div style="font-size: 12px; color: var(--text-secondary); font-weight: 500;">Colored Initials</div>
+              <div id="initialsOption" onclick="updateBotIdentity('initials')" style="width: 100px; height: 100px; border: 2px solid var(--border-light); border-radius: 16px; background: linear-gradient(135deg, #1e40af, #059669); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 36px; color: white; cursor: pointer; transition: all 0.2s;">
+                <span id="initialsDisplay">JC</span>
+              </div>
+              <input type="radio" name="botIdentity" value="initials" onchange="updateBotIdentity('initials')" style="cursor: pointer;" />
+            </label>
+          </div>
+        </div>
+
+        <!-- Bot Name -->
+        <div style="margin-bottom: 56px;">
+          <div style="font-weight: 600; margin-bottom: 8px; font-size: 13px;">Bot Name</div>
+          <input id="botName" type="text" value="Jefferson Cleaners" style="width: 100%; max-width: 500px; padding: 12px 16px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 8px; color: var(--text); font-size: 14px;" onchange="updateInitials()" />
+          <div style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">This is how your bot will introduce itself. You can change this anytime.</div>
+        </div>
+
+        <!-- Brand Colors -->
+        <div style="margin-bottom: 56px;">
+          <div style="font-weight: 600; margin-bottom: 16px; font-size: 13px;">Brand Colors</div>
+          <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">We found these colors on your site. Edit them if needed.</p>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 500px;">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div id="color1" style="width: 100%; height: 80px; border-radius: 8px; border: 1px solid var(--border-light); background: #1e40af;"></div>
+              <input id="color1Input" type="text" value="#1e40af" style="padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 6px; color: var(--text); font-size: 12px; text-align: center; font-family: monospace;" onchange="updateColor(1)" />
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div id="color2" style="width: 100%; height: 80px; border-radius: 8px; border: 1px solid var(--border-light); background: #059669;"></div>
+              <input id="color2Input" type="text" value="#059669" style="padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 6px; color: var(--text); font-size: 12px; text-align: center; font-family: monospace;" onchange="updateColor(2)" />
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div id="color3" style="width: 100%; height: 80px; border-radius: 8px; border: 1px solid var(--border-light); background: #64748b;"></div>
+              <input id="color3Input" type="text" value="#64748b" style="padding: 10px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 6px; color: var(--text); font-size: 12px; text-align: center; font-family: monospace;" onchange="updateColor(3)" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Personality Examples -->
+        <div style="margin-bottom: 56px;">
+          <div style="font-weight: 600; margin-bottom: 8px; font-size: 13px;">Personality</div>
+          <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 20px;">We detected a <strong>Professional</strong> tone on your site. Click to change.</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+            <button class="tone-badge-large active-tone" id="tone-professional" onclick="toggleTone(this, 'Professional')" style="padding: 16px; border-radius: 12px; border: 2px solid var(--purple-light); background: rgba(124, 58, 237, 0.15); color: var(--text); text-align: left; cursor: pointer; transition: all 0.2s;">
+              <div style="font-weight: 600; font-size: 13px; margin-bottom: 8px;">Professional</div>
+              <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.5;">Hello. How can I assist you with our services today?</div>
+            </button>
+            <button class="tone-badge-large" id="tone-friendly" onclick="toggleTone(this, 'Helpful')" style="padding: 16px; border-radius: 12px; border: 2px solid var(--border-light); background: transparent; color: var(--text); text-align: left; cursor: pointer; transition: all 0.2s;">
+              <div style="font-weight: 600; font-size: 13px; margin-bottom: 8px;">Helpful</div>
+              <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.5;">Hi there! Happy to help. What can I assist you with?</div>
+            </button>
+            <button class="tone-badge-large" id="tone-direct" onclick="toggleTone(this, 'Direct')" style="padding: 16px; border-radius: 12px; border: 2px solid var(--border-light); background: transparent; color: var(--text); text-align: left; cursor: pointer; transition: all 0.2s;">
+              <div style="font-weight: 600; font-size: 13px; margin-bottom: 8px;">Direct</div>
+              <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.5;">What do you need? I can help with orders, hours, or booking.</div>
+            </button>
+            <button class="tone-badge-large" id="tone-warm" onclick="toggleTone(this, 'Warm')" style="padding: 16px; border-radius: 12px; border: 2px solid var(--border-light); background: transparent; color: var(--text); text-align: left; cursor: pointer; transition: all 0.2s;">
+              <div style="font-weight: 600; font-size: 13px; margin-bottom: 8px;">Warm</div>
+              <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.5;">Good to see you! What brings you in today? We're here for you.</div>
+            </button>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <button class="btn-analyze" onclick="goToChat()">See Your Custom Bot</button>
+          <button style="width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border-light); border-radius: 8px; color: var(--text-secondary); cursor: pointer;" onclick="goBackToStage2()">← Back</button>
+        </div>
+      </div>
+
+      <!-- STAGE 4: Interactive Testing -->
+      <div id="stage4" class="stage-container" style="display: none;">
+        <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 24px;">
+          <div style="font-size: 12px; color: var(--text-secondary); background: rgba(124, 58, 237, 0.1); padding: 6px 12px; border-radius: 4px;">Step 3 of 7</div>
+        </div>
+        <h2 style="margin-bottom: 12px;">Test your bot.</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 32px; font-size: 14px;">Try asking questions to see how your bot responds. Use the buttons below or type your own.</p>
+        <div style="margin-bottom: 32px;">
+          <!-- Tab/Label showing this is the bot preview -->
+          <div style="display: inline-block; padding: 10px 16px; background: linear-gradient(135deg, #1e40af, #059669); color: white; border-radius: 8px 8px 0 0; font-size: 13px; font-weight: 700; margin-bottom: 0;">Your Bot Preview</div>
+          
+          <!-- Chat Container Styled to Brand with Outline Border (doesn't eat padding) -->
+          <div style="outline: 3px solid #1e40af; outline-offset: 0px; border-radius: 12px; overflow: hidden; background: var(--bg-secondary);">
+            <!-- Chat Header -->
+            <div style="background: linear-gradient(135deg, #1e40af, #059669); padding: 16px; display: flex; gap: 12px; align-items: center;">
+              <div id="chatBotAvatar" style="width: 40px; height: 40px; border-radius: 8px; background: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: #1e40af; flex-shrink: 0;">
+                <span id="chatBotDisplay">JC</span>
+              </div>
+              <div>
+                <div style="font-weight: 600; font-size: 14px; color: white;" id="chatBotName">Jefferson Cleaners</div>
+                <div style="font-size: 11px; color: rgba(255,255,255,0.8);">Online · Always here to help</div>
+              </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="chat-box" style="border: none; border-radius: 0; background: transparent; max-height: 400px;">
+              <div class="chat-messages" id="chatMessages" style="background: var(--bg); padding: 20px; gap: 12px; display: flex; flex-direction: column;">
+                <div class="chat-bubble bot">
+                  <div class="bot-avatar">JC</div>
+                  <div class="bot-message-text">Hi there! Welcome to Jefferson Cleaners. I'm here to help with any questions about our services. What can I assist you with today?</div>
+                </div>
+              </div>
+              <div class="chat-input-group" style="border-radius: 0; border-top: 1px solid var(--border-light); background: var(--bg); padding: 16px; display: flex; gap: 12px; align-items: center;">
+                <input type="text" id="chatInput" class="chat-input" placeholder="Ask me something..." onkeypress="if(event.key==='Enter') sendMessage()" style="border: none; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-light); padding: 12px 16px; flex: 1; border-radius: 8px; color: var(--text); font-size: 14px;" />
+                <button class="btn-send" onclick="sendMessage()" style="background: #1e40af; border: none; color: white; padding: 12px 24px; border-radius: 8px; margin: 0; font-weight: 600; font-size: 14px; cursor: pointer;">Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sample Questions (Zuri UI) -->
+        <div style="margin: 32px 0;">
+          <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Try asking:</div>
+          <div id="sampleButtonsContainer" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <button class="sample-btn" onclick="sendSampleQuestion('What are your hours?')" style="padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 8px; color: var(--text-secondary); font-size: 12px; cursor: pointer;">What are your hours?</button>
+            <button class="sample-btn" onclick="sendSampleQuestion('Do you offer drop-off service?')" style="padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 8px; color: var(--text-secondary); font-size: 12px; cursor: pointer;">Drop-off service?</button>
+            <button class="sample-btn" onclick="sendSampleQuestion('How much does laundry cost?')" style="padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 8px; color: var(--text-secondary); font-size: 12px; cursor: pointer;">Pricing?</button>
+            <button class="sample-btn" onclick="sendSampleQuestion('Can I book online?')" style="padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 8px; color: var(--text-secondary); font-size: 12px; cursor: pointer;">Book online?</button>
+          </div>
+        </div>
+
+        <!-- Zuri UI Button (single button now) -->
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <button class="btn-analyze" onclick="showDeploymentOptions()" style="width: 100%;">Ready to Deploy</button>
+          <button style="width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border-light); border-radius: 8px; color: var(--text-secondary); cursor: pointer;" onclick="goBackToStage3()">← Back</button>
+        </div>
+      </div>
+
+      <!-- STAGE 5: Deployment Selection -->
+      <div id="stage5" class="stage-container" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+          <h2>Where do you want to deploy?</h2>
+          <div style="font-size: 12px; color: var(--text-secondary); background: rgba(124, 58, 237, 0.1); padding: 6px 12px; border-radius: 4px;">Step 4 of 7</div>
+        </div>
+        <p style="color: var(--text-secondary); margin-bottom: 48px; font-size: 14px;">Choose your platform and we'll get you set up.</p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 48px; max-width: 500px;">
+          <div id="deploymentWebsite" class="deployment-card" onclick="selectDeployment('website')" style="padding: 32px; border: 2px solid var(--purple); border-radius: 12px; cursor: pointer; transition: all 0.2s; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; background: rgba(124, 58, 237, 0.05);">
+            <div style="font-size: 48px;">🌐</div>
+            <div style="font-weight: 600;">Embed on Website</div>
+            <div style="font-size: 12px; color: var(--text-secondary);">Copy & paste code</div>
+          </div>
+
+          <div id="deploymentWhatsapp" class="deployment-card" onclick="selectDeployment('whatsapp')" style="padding: 32px; border: 2px solid var(--border-light); border-radius: 12px; cursor: pointer; transition: all 0.2s; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px;">
+            <div style="font-size: 48px;">💬</div>
+            <div style="font-weight: 600;">WhatsApp Business</div>
+            <div style="font-size: 12px; color: var(--text-secondary);">Reach customers where they already chat</div>
+          </div>
+        </div>
+
+        <div style="padding: 16px; background: rgba(124, 58, 237, 0.05); border-radius: 8px; margin-bottom: 32px; border: 1px solid rgba(124, 58, 237, 0.2);">
+          <div style="font-size: 12px; color: var(--text-secondary);">Looking for Slack, Zendesk, or a custom integration? <a href="javascript:alert('Contact support: hello@zuri.chat')" style="color: var(--purple); font-weight: 600; text-decoration: none;">Contact our team</a></div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
+          <button id="continueDeploymentBtn" class="btn-analyze" onclick="proceedToLeadCapture()" style="width: 100%; padding: 16px; background: var(--purple); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 16px; cursor: pointer;">Continue</button>
+          <button style="width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border-light); border-radius: 8px; color: var(--text-secondary); cursor: pointer;" onclick="showStage(4)">← Back</button>
+        </div>
+      </div>
+
+      <!-- STAGE 5.5: Lead Capture -->
+      <div id="stage5b" class="stage-container" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+          <h2>Save your progress to continue.</h2>
+          <div style="font-size: 12px; color: var(--text-secondary); background: rgba(124, 58, 237, 0.1); padding: 6px 12px; border-radius: 4px;">Step 5 of 7</div>
+        </div>
+        <p style="color: var(--text-secondary); margin-bottom: 32px; font-size: 14px;">We'll send you a link to continue anytime. We'll hold your bot preview for 48 hours. Plus, we'll customize options based on your needs.</p>
+        <p style="color: #7c3aed; margin-bottom: 32px; font-size: 14px; font-weight: 600;">Join 500+ coaches using Zuri to capture leads 24/7.</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 20px; max-width: 500px; margin-bottom: 32px;">
+          <div>
+            <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 500; color: var(--text-secondary);">Email</label>
+            <input type="email" id="leadEmail" placeholder="your@email.com" style="width: 100%; padding: 12px 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-light); border-radius: 8px; color: var(--text); font-size: 14px;" required />
+          </div>
+          
+          <div>
+            <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 500; color: var(--text-secondary);">Company</label>
+            <input type="text" id="leadCompany" placeholder="Jefferson Cleaners" style="width: 100%; padding: 12px 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-light); border-radius: 8px; color: var(--text); font-size: 14px;" />
+          </div>
+          
+          <div>
+            <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 500; color: var(--text-secondary);">Phone (optional)</label>
+            <input type="tel" id="leadPhone" placeholder="+1 (555) 123-4567" style="width: 100%; padding: 12px 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-light); border-radius: 8px; color: var(--text); font-size: 14px;" />
+          </div>
+          
+          <div>
+            <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 500; color: var(--text-secondary);">What's your biggest support pain point? (optional)</label>
+            <textarea id="leadChallenge" placeholder="E.g., Too many customer questions, need 24/7 response..." style="width: 100%; padding: 12px 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-light); border-radius: 8px; color: var(--text); font-size: 14px; min-height: 80px; resize: none;"></textarea>
+          </div>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <button class="btn-analyze" onclick="saveLeadAndContinue()">Save & Continue</button>
+          <button style="width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border-light); border-radius: 8px; color: var(--text-secondary); cursor: pointer;" onclick="showStage(5)">← Back</button>
+        </div>
+      </div>
+
+      <!-- STAGE 7: Activation & Pricing -->
+      <div id="stage7" class="stage-container" style="display: none;">
+        <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 24px;">
+          <div style="font-size: 12px; color: var(--text-secondary); background: rgba(124, 58, 237, 0.1); padding: 6px 12px; border-radius: 4px;">Step 6 of 7</div>
+        </div>
+        <div style="margin-bottom: 48px;">
+          <h2 style="margin-bottom: 12px;">Choose your plan.</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 14px;">All plans include 14-day free trial. No credit card required. Cancel anytime.</p>
+          <p style="color: var(--purple); margin-bottom: 0; font-size: 13px; font-weight: 600;">Deploying to: <span id="deploymentName" style="text-transform: capitalize;"></span></p>
+        </div>
+
+        <div style="margin-bottom: 48px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+          
+          <!-- Lite -->
+          <div id="planLite" class="plan-card" onclick="selectPlan('lite')" style="padding: 24px; border: 2px solid var(--border-light); border-radius: 12px; text-align: left; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; position: relative;">
+            <div style="position: absolute; top: 16px; right: 16px; width: 20px; height: 20px; border: 2px solid var(--border-light); border-radius: 4px; background: transparent; display: flex; align-items: center; justify-content: center; font-size: 12px;" id="checkLite"></div>
+            <div style="font-weight: 600; margin-bottom: 4px;">Lite</div>
+            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; font-style: italic;">Test it out</div>
+            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 16px;">Perfect for trying before committing.</div>
+            <div style="font-size: 28px; font-weight: 700; margin-bottom: 4px;">Free</div>
+            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 24px;">Forever free</div>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 24px; flex: 1;">
+              Up to 500 leads/month<br/>
+              1 website<br/>
+              Email support<br/>
+              <span style="font-size: 11px; color: #f59e0b;">Perfect for testing</span>
+            </div>
+          </div>
+
+          <!-- Standard (Recommended) -->
+          <div id="planStandard" class="plan-card" onclick="selectPlan('standard')" style="padding: 24px; border: 2px solid var(--purple); border-radius: 12px; text-align: left; cursor: pointer; transition: all 0.2s; position: relative; display: flex; flex-direction: column; background: rgba(124, 58, 237, 0.05);">
+            <div style="position: absolute; top: -12px; left: 16px; background: var(--purple); color: white; padding: 4px 12px; border-radius: 4px; font-size: 11px; font-weight: 600;">Most Popular</div>
+            <div style="position: absolute; top: 16px; right: 16px; width: 20px; height: 20px; border: 2px solid var(--purple); border-radius: 4px; background: var(--purple); display: flex; align-items: center; justify-content: center; font-size: 12px; color: white;" id="checkStandard">✓</div>
+            <div style="font-weight: 600; margin-bottom: 4px;">Standard</div>
+            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; font-style: italic;">For serious growth</div>
+            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 16px;">Most businesses start here. Scale up whenever you're ready.</div>
+            <div style="font-size: 28px; font-weight: 700; margin-bottom: 4px;">$49<span style="font-size: 14px; color: var(--text-secondary);">/mo</span></div>
+            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 24px;">14-day free trial</div>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 24px; flex: 1;">
+              5K monthly leads<br/>
+              Website + WhatsApp<br/>
+              Lead analytics<br/>
+              Slack support<br/>
+              <span style="font-size: 11px; color: #059669;">Best value</span>
+            </div>
+          </div>
+
+          <!-- Pro -->
+          <div id="planPro" class="plan-card" onclick="selectPlan('pro')" style="padding: 24px; border: 2px solid var(--border-light); border-radius: 12px; text-align: left; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; position: relative;">
+            <div style="position: absolute; top: 16px; right: 16px; width: 20px; height: 20px; border: 2px solid var(--border-light); border-radius: 4px; background: transparent; display: flex; align-items: center; justify-content: center; font-size: 12px;" id="checkPro"></div>
+            <div style="font-weight: 600; margin-bottom: 4px;">Enterprise</div>
+            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; font-style: italic;">Scale without limits</div>
+            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 16px;">Talk to our team about custom setup.</div>
+            <div style="font-size: 28px; font-weight: 700; margin-bottom: 4px;">$249<span style="font-size: 14px; color: var(--text-secondary);">/mo</span></div>
+            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 24px;">14-day free trial</div>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 24px; flex: 1;">
+              25K monthly leads<br/>
+              All channels<br/>
+              Advanced analytics<br/>
+              Priority 24/7 support<br/>
+              <span style="font-size: 11px; color: #059669;">Custom integrations</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align: center; color: var(--text-secondary); font-size: 13px; margin-bottom: 48px; padding-bottom: 24px; border-bottom: 1px solid var(--border-light);">
+          Need Slack, Zendesk, or custom setup? <a onclick="alert('Contact us at hello@zuri.chat'); return false;" style="color: var(--purple); text-decoration: none; font-weight: 600; cursor: pointer;">Contact our team</a>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <button class="btn-analyze" id="continueFromPricingBtn" onclick="proceedToCheckout()">Continue</button>
+          <button style="width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border-light); border-radius: 8px; color: var(--text-secondary); cursor: pointer;" onclick="showStage('5b')">← Back</button>
+        </div>
+      </div>
+
+      <!-- STAGE 6A: Website Embed -->
+      <div id="stage6a" class="stage-container" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+          <h2>Add Zuri to your website</h2>
+          <div style="font-size: 12px; color: var(--text-secondary); background: rgba(124, 58, 237, 0.1); padding: 6px 12px; border-radius: 4px;">Step 7 of 7</div>
+        </div>
+        <p style="color: var(--text-secondary); margin-bottom: 32px; font-size: 14px;">Copy this code and paste it into your website HTML. Live in seconds.</p>
+        
+        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 8px; border: 1px solid var(--border-light); margin-bottom: 24px; font-family: monospace; font-size: 12px; overflow-x: auto;">
+          <code style="color: var(--text-secondary);">
+&lt;script src="https://cdn.zuri.chat/embed.js?session=ABC123XYZ"&gt;&lt;/script&gt;
+          </code>
+        </div>
+        
+        <button onclick="copyEmbedCode()" style="width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border-light); border-radius: 8px; color: var(--text-secondary); font-weight: 600; margin-bottom: 12px; cursor: pointer;">Copy Code</button>
+        
+        <div style="background: rgba(124, 58, 237, 0.1); padding: 16px; border-radius: 8px; border: 1px solid rgba(124, 58, 237, 0.3); margin-bottom: 24px; font-size: 13px; color: var(--text-secondary);">
+          Paste this before the closing &lt;/body&gt; tag. Your bot will appear as a widget in the bottom right.
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <button class="btn-analyze" onclick="completeDeployment()">Continue</button>
+          <button onclick="goBackToPricing()" style="width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border-light); border-radius: 8px; color: var(--text-secondary); cursor: pointer;">← Back to Pricing</button>
+        </div>
+      </div>
+
+      <!-- STAGE 6B: WhatsApp Business -->
+      <div id="stage6b" class="stage-container" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+          <h2>Connect WhatsApp Business</h2>
+          <div style="font-size: 12px; color: var(--text-secondary); background: rgba(124, 58, 237, 0.1); padding: 6px 12px; border-radius: 4px;">Step 7 of 7</div>
+        </div>
+        <p style="color: var(--text-secondary); margin-bottom: 32px; font-size: 14px;">Scan this QR code with your phone to start conversations with your bot.</p>
+        
+        <div style="background: white; padding: 24px; border-radius: 12px; width: 280px; height: 280px; display: flex; align-items: center; justify-content: center; margin-bottom: 32px; position: relative;">
+          <div style="text-align: center; color: #0f0f1e;">
+            <div style="font-size: 120px; line-height: 1;">⬜</div>
+            <div style="margin-top: 8px; font-size: 12px; color: #64748b;">QR Code Placeholder</div>
+          </div>
+          <div style="position: absolute; top: 8px; right: 8px; background: rgba(0, 0, 0, 0.7); color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 600;">PLACEHOLDER</div>
+        </div>
+        
+        <div style="background: rgba(124, 58, 237, 0.1); padding: 16px; border-radius: 8px; border: 1px solid rgba(124, 58, 237, 0.3); margin-bottom: 24px; font-size: 13px; color: var(--text-secondary);">
+          Your bot is now live on WhatsApp. Scan with any device and start chatting. Share this link with your customers.
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <button class="btn-analyze" onclick="completeDeployment()">Continue</button>
+          <button onclick="goBackToPricing()" style="width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border-light); border-radius: 8px; color: var(--text-secondary); cursor: pointer;">← Back to Pricing</button>
+        </div>
+      </div>
+
+      <!-- STAGE 8: Completion & Dashboard -->
+      <div id="stage8" class="stage-container" style="display: none;">
+        <div style="text-align: center; margin-bottom: 24px;">
+          <div style="font-size: 12px; color: #4ade80; background: rgba(74, 222, 128, 0.2); padding: 6px 12px; border-radius: 4px; display: inline-block;">✓ Your bot is ready</div>
+        </div>
+        <div style="text-align: center; margin-bottom: 48px;">
+          <div style="font-size: 64px; margin-bottom: 24px; animation: scaleIn 0.5s ease-out;">✓</div>
+          <h2 style="font-size: 36px; color: #4ade80; margin-bottom: 16px;">Your bot is configured</h2>
+          <p style="color: var(--text-secondary); font-size: 16px;">Test it out or add it to your website</p>
+        </div>
+
+        <div style="background: rgba(74, 222, 128, 0.1); border: 2px solid rgba(74, 222, 128, 0.3); border-radius: 12px; padding: 32px; margin-bottom: 48px; text-align: center;">
+          <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 12px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Share your demo</div>
+          <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+            <input type="text" id="demoShareUrl" readonly style="flex: 1; padding: 12px 16px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 8px; color: var(--text); font-size: 13px; font-family: monospace;" />
+            <button onclick="copyDemoUrl()" style="padding: 12px 24px; background: #4ade80; color: #0f0f1e; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Copy</button>
+          </div>
+          <div style="font-size: 12px; color: var(--text-secondary);">Anyone can view your bot demo at this link</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
+          <button onclick="goToDashboard()" style="width: 100%; padding: 16px; background: var(--purple); color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 16px; cursor: pointer;">Go to Dashboard</button>
+        </div>
+      </div>
+
+      <!-- DASHBOARD: Mock Bot Status -->
+      <div id="dashboard" class="stage-container" style="display: none; background: var(--bg);">
+        <!-- Navigation Tabs -->
+        <div style="display: flex; gap: 24px; margin-bottom: 32px; padding: 24px 0; border-bottom: 1px solid var(--border-light); font-size: 13px;">
+          <div style="color: var(--purple); font-weight: 600; cursor: pointer; text-decoration: none;">Overview</div>
+          <div style="color: var(--text-secondary); cursor: not-allowed; opacity: 0.5;" onclick="alert('Analytics coming soon')">Analytics</div>
+          <div style="color: var(--text-secondary); cursor: not-allowed; opacity: 0.5;" onclick="alert('Integrations coming soon')">Integrations</div>
+          <div style="color: var(--text-secondary); cursor: not-allowed; opacity: 0.5;" onclick="alert('Team coming soon')">Team</div>
+        </div>
+
+        <!-- Company Info + Welcome -->
+        <div style="margin-bottom: 32px;">
+          <p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 8px;">Welcome back, Isaak</p>
+          <h2 style="margin-bottom: 4px;">Jefferson Cleaners</h2>
+          <p style="color: var(--text-secondary); font-size: 13px;">Bot Dashboard</p>
+        </div>
+
+        <!-- SECTION 1: This Week at a Glance -->
+        <div style="margin-bottom: 48px;">
+          <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 4px; color: var(--text-secondary); text-transform: uppercase;">This Week at a Glance</h3>
+          <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">Oct 1 – Oct 4, 2026</p>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;">
+            <!-- Conversations -->
+            <div style="padding: 20px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 12px;">
+              <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 8px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Conversations</div>
+              <div style="font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 4px;">47</div>
+              <div style="color: #4ade80; font-size: 12px; font-weight: 600;">↑ 12% vs last week</div>
+            </div>
+
+            <!-- Leads Captured -->
+            <div style="padding: 20px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 12px;">
+              <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 8px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Leads Captured</div>
+              <div style="font-size: 28px; font-weight: 700; color: var(--purple); margin-bottom: 4px;">12</div>
+              <div style="color: #4ade80; font-size: 12px; font-weight: 600;">↑ 8% vs last week</div>
+            </div>
+
+            <!-- Conversion Rate -->
+            <div style="padding: 20px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 12px;">
+              <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 8px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Conversion Rate</div>
+              <div style="font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 4px;">25.5%</div>
+              <div style="color: var(--text-secondary); font-size: 12px;">conversations → leads</div>
+            </div>
+
+            <!-- Hours Saved -->
+            <div style="padding: 20px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 12px;">
+              <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 8px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px;">Hours Saved <span title="Based on 47 conversations × ~8 min average response time avoided" style="cursor: help; color: var(--text-secondary);">?</span></div>
+              <div style="font-size: 28px; font-weight: 700; color: #4ade80; margin-bottom: 4px;">~6</div>
+              <div style="color: var(--text-secondary); font-size: 12px;">manual work avoided</div>
+            </div>
+
+            <!-- Unqualified -->
+            <div style="padding: 20px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 12px;">
+              <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 8px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Unqualified <span title="People who talked to the bot but didn't become a lead" style="cursor: help; color: var(--text-secondary);">?</span></div>
+              <div style="font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 4px;">35</div>
+              <div style="color: var(--text-secondary); font-size: 12px;">didn't convert</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Getting Started + Knowledge Base (Side by side) -->
+        <div style="margin-bottom: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <!-- Getting Started (Left) -->
+          <div>
+            <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--text-secondary); text-transform: uppercase;">Getting Started</h3>
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 12px; padding: 20px;">
+              <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+                <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px;">
+                  <div style="background: #4ade80; color: #0f0f1e; width: 20px; height: 20px; min-width: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px;">✓</div>
+                  <div style="flex: 1;">
+                    <div style="color: var(--text); font-weight: 600; font-size: 12px;">Bot configured and live</div>
+                    <a href="#" onclick="showStage('stage4'); return false;" style="display: inline-block; padding: 4px 8px; color: var(--purple); font-size: 11px; font-weight: 600; text-decoration: none; margin-top: 4px;">View and test bot →</a>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px;">
+                  <div style="background: rgba(124, 58, 237, 0.2); color: var(--purple); width: 20px; height: 20px; min-width: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px;">→</div>
+                  <div style="flex: 1;">
+                    <div style="color: var(--text); font-weight: 600; font-size: 12px;">Customize responses</div>
+                    <button onclick="customizeResponses()" style="padding: 6px 12px; background: var(--purple); color: white; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 11px; margin-top: 6px;">Customize →</button>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; align-items: flex-start;">
+                  <div style="background: rgba(100, 116, 139, 0.3); color: var(--text-secondary); width: 20px; height: 20px; min-width: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px;">2</div>
+                  <div>
+                    <div style="color: var(--text); font-weight: 600; font-size: 12px;">Invite your team</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Knowledge Base (Right) -->
+          <div>
+            <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--text-secondary); text-transform: uppercase;">Knowledge Base</h3>
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 12px; padding: 20px;">
+              <div style="font-size: 12px;">
+                <div style="margin-bottom: 12px;">
+                  <div style="color: var(--text-secondary); font-size: 11px; text-transform: uppercase; font-weight: 600; margin-bottom: 4px;">Source</div>
+                  <div style="color: var(--text); font-weight: 600;">jeffersonscleaners.com</div>
+                </div>
+                <div style="margin-bottom: 12px;">
+                  <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 4px;">
+                    <span style="display: inline-block; width: 6px; height: 6px; background: #4ade80; border-radius: 50%; margin-right: 6px; vertical-align: middle;"></span>Synced • 24 min ago
+                  </div>
+                  <div style="color: var(--text-secondary); font-size: 11px;">14 pages indexed</div>
+                </div>
+                <button onclick="resyncKnowledgeBase()" style="padding: 6px 12px; background: var(--purple); color: white; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 11px; width: 100%;">Re-sync</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: Recent Conversations -->
+        <div style="margin-bottom: 48px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="font-size: 14px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Recent Conversations</h3>
+            <a style="color: var(--text-secondary); font-size: 12px; font-weight: 600; cursor: not-allowed; text-decoration: none; opacity: 0.5;">View all →</a>
+          </div>
+          <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Showing 3 of 47 conversations • Oct 1–4, 2026</div>
+          <div style="background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 12px; padding: 24px; overflow-x: auto;">
+          
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--border-light);">
+                <th style="text-align: left; padding: 12px 0; color: var(--text-secondary); font-weight: 600;">Name</th>
+                <th style="text-align: left; padding: 12px 12px; color: var(--text-secondary); font-weight: 600;">Status</th>
+                <th style="text-align: left; padding: 12px 12px; color: var(--text-secondary); font-weight: 600;">Message</th>
+                <th style="text-align: left; padding: 12px 12px; color: var(--text-secondary); font-weight: 600;">Time</th>
+                <th style="text-align: center; padding: 12px 0; color: var(--text-secondary); font-weight: 600;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Lead 1: Qualified (needs meeting scheduled) -->
+              <tr style="border-bottom: 1px solid var(--border-light);">
+                <td style="padding: 12px 0; color: var(--text);">Sarah M.</td>
+                <td style="padding: 12px 12px;"><span style="background: #4ade80; color: #0f0f1e; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 4px; display: inline-block;">Qualified</span></td>
+                <td style="padding: 12px 12px; color: var(--text-secondary); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">"Do you offer same-day service?"</td>
+                <td style="padding: 12px 12px; color: var(--text-secondary);">Oct 4, 2:58 PM</td>
+                <td style="padding: 12px 0; text-align: center;"><button style="padding: 6px 12px; background: rgba(124, 58, 237, 0.3); color: var(--text-secondary); border: none; border-radius: 4px; font-weight: 600; cursor: not-allowed; font-size: 11px; opacity: 0.5;">View</button></td>
+              </tr>
+
+              <!-- Lead 2: Booked (conversion complete) -->
+              <tr style="border-bottom: 1px solid var(--border-light);">
+                <td style="padding: 12px 0; color: var(--text);">Diana R.</td>
+                <td style="padding: 12px 12px;"><span style="background: var(--purple); color: white; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 4px; display: inline-block;">Booked</span></td>
+                <td style="padding: 12px 12px; color: var(--text-secondary); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">"Book me for Monday morning"</td>
+                <td style="padding: 12px 12px; color: var(--text-secondary);">Oct 4, 2:32 PM</td>
+                <td style="padding: 12px 0; text-align: center;"><button style="padding: 6px 12px; background: rgba(124, 58, 237, 0.3); color: var(--text-secondary); border: none; border-radius: 4px; font-weight: 600; cursor: not-allowed; font-size: 11px; opacity: 0.5;">View</button></td>
+              </tr>
+
+              <!-- Lead 3: Needs Follow-up (warm but not yet converted) -->
+              <tr>
+                <td style="padding: 12px 0; color: var(--text);">Marcus J.</td>
+                <td style="padding: 12px 12px;"><span style="background: rgba(100, 116, 139, 0.7); color: white; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 4px; display: inline-block;">Follow-up</span></td>
+                <td style="padding: 12px 12px; color: var(--text-secondary); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">"Can you hem pants?"</td>
+                <td style="padding: 12px 12px; color: var(--text-secondary);">Oct 4, 2:45 PM</td>
+                <td style="padding: 12px 0; text-align: center;"><button style="padding: 6px 12px; background: rgba(124, 58, 237, 0.3); color: var(--text-secondary); border: none; border-radius: 4px; font-weight: 600; cursor: not-allowed; font-size: 11px; opacity: 0.5;">View</button></td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+          <div style="background: rgba(124, 58, 237, 0.05); padding: 16px 24px; border-top: 1px solid var(--border-light); border-radius: 0 0 12px 12px; font-size: 11px; color: var(--text-secondary);">
+            <strong style="color: var(--text);">Plan: Standard</strong> • 1,000 conversations/month • 953 remaining
+          </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div style="margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
+          <button style="padding: 8px 16px; background: transparent; border: 1px solid var(--border-light); color: var(--text-secondary); border-radius: 6px; font-weight: 600; cursor: not-allowed; font-size: 12px; opacity: 0.5;">? Help</button>
+          <div style="font-size: 11px; color: var(--text-secondary);">
+            <a href="#" onclick="return false;" style="color: var(--text-secondary); text-decoration: none; margin-right: 24px;">Terms</a>
+            <a href="#" onclick="return false;" style="color: var(--text-secondary); text-decoration: none; margin-right: 24px;">Privacy</a>
+            <a href="#" onclick="return false;" style="color: var(--text-secondary); text-decoration: none;">Docs</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function goToApp() {
+      document.getElementById('landingPage').classList.add('hidden');
+      document.getElementById('appPage').classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function loginToDashboard() {
+      document.getElementById('landingPage').classList.add('hidden');
+      document.getElementById('appPage').classList.add('active');
+      goToDashboard();
+    }
+
+    function goBackToLanding() {
+      const progressDotsParent = document.getElementById('progressDots').parentElement;
+      if (progressDotsParent) {
+        progressDotsParent.style.display = 'flex';
+      }
+      document.getElementById('flowHelpBtn').style.display = 'inline-block';
+      document.getElementById('exitBtn').style.display = 'inline-block';
+      document.getElementById('settingsBtn').style.display = 'none';
+      document.getElementById('logoutBtn').style.display = 'none';
+      document.getElementById('landingPage').classList.remove('hidden');
+      document.getElementById('appPage').classList.remove('active');
+      window.scrollTo(0, 0);
+    }
+
+    function showStage(stageId) {
+      const stages = ['stage1', 'stage2', 'stage3', 'stage4', 'stage5', 'stage5b', 'stage6a', 'stage6b', 'stage7', 'stage8', 'dashboard'];
+      stages.forEach(s => {
+        const el = document.getElementById(s);
+        if (el) el.style.display = 'none';
+      });
+      const targetId = (String(stageId).startsWith('stage') || stageId === 'dashboard') ? stageId : 'stage' + stageId;
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.style.display = 'block';
+        window.scrollTo(0, 0);
+      }
+      updateProgressDots(stageId);
+    }
+
+    function updateProgressDots(stageId) {
+      const stageMap = {
+        '1': 0,
+        '3': 1,
+        '4': 2,
+        '5': 3,
+        '5b': 4,
+        '7': 5,
+        '6a': 6,
+        '6b': 6,
+        '8': 7
+      };
+      
+      const numericStageId = String(stageId).replace('stage', '');
+      const currentIndex = stageMap[numericStageId];
+      
+      const dots = document.querySelectorAll('.progress-dot');
+      dots.forEach((dot, index) => {
+        dot.classList.remove('active', 'completed');
+        if (index === currentIndex) {
+          dot.classList.add('active');
+        } else if (index < currentIndex) {
+          dot.classList.add('completed');
+        }
+      });
+    }
+
+    function smoothScroll(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function startAnalysis() {
+      const url = document.getElementById('urlInput').value;
+      if (!url) {
+        alert('Please enter a URL');
+        return;
+      }
+      showStage('stage3');
+    }
+
+    function updateBotIdentity(type) {
+      const logoDiv = document.getElementById('logoOption');
+      const initialsDiv = document.getElementById('initialsOption');
+      const logoRadio = document.querySelector('input[value="logo"]');
+      const initialsRadio = document.querySelector('input[value="initials"]');
+      
+      if (type === 'logo') {
+        logoDiv.style.borderColor = 'var(--purple-light)';
+        initialsDiv.style.borderColor = 'var(--border-light)';
+        logoRadio.checked = true;
+      } else {
+        initialsDiv.style.borderColor = 'var(--purple-light)';
+        logoDiv.style.borderColor = 'var(--border-light)';
+        initialsRadio.checked = true;
+      }
+    }
+
+    function updateInitials() {
+      const name = document.getElementById('botName').value || 'JC';
+      const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+      document.getElementById('initialsDisplay').textContent = initials;
+      if (document.getElementById('chatBotDisplay')) {
+        document.getElementById('chatBotDisplay').textContent = initials;
+      }
+    }
+
+    function updateColor(num) {
+      const input = document.getElementById('color' + num + 'Input');
+      const div = document.getElementById('color' + num);
+      try {
+        div.style.background = input.value;
+      } catch (e) {}
+      const color1 = document.getElementById('color1Input').value;
+      const color2 = document.getElementById('color2Input').value;
+      document.getElementById('initialsOption').style.background = 'linear-gradient(135deg, ' + color1 + ', ' + color2 + ')';
+      if (document.getElementById('chatBotAvatar')) {
+        document.getElementById('chatBotAvatar').style.background = 'linear-gradient(135deg, ' + color1 + ', ' + color2 + ')';
+      }
+    }
+
+    function toggleTone(el, tone) {
+      // Remove active state from all tone buttons
+      const allButtons = document.querySelectorAll('.tone-badge-large');
+      allButtons.forEach(btn => {
+        btn.style.borderColor = 'var(--border-light)';
+        btn.style.background = 'transparent';
+      });
+      // Set active state on clicked button
+      el.style.borderColor = 'var(--purple-light)';
+      el.style.background = 'rgba(124, 58, 237, 0.15)';
+    }
+
+    function goToChat() {
+      showStage('stage4');
+    }
+
+    function goBackToStage2() {
+      showStage('stage2');
+    }
+
+    function goBackToStage3() {
+      showStage('stage3');
+    }
+
+    function goBackToStage4() {
+      showStage('stage4');
+    }
+
+    function showDeploymentOptions() {
+      showStage('stage5');
+    }
+
+    function selectDeployment(type) {
+      window.selectedDeployment = type;
+      document.getElementById('deploymentWebsite').style.borderColor = type === 'website' ? 'var(--purple)' : 'var(--border-light)';
+      document.getElementById('deploymentWebsite').style.background = type === 'website' ? 'rgba(124, 58, 237, 0.05)' : 'transparent';
+      document.getElementById('deploymentWhatsapp').style.borderColor = type === 'whatsapp' ? 'var(--purple)' : 'var(--border-light)';
+      document.getElementById('deploymentWhatsapp').style.background = type === 'whatsapp' ? 'rgba(124, 58, 237, 0.05)' : 'transparent';
+    }
+
+    function proceedToLeadCapture() {
+      if (!window.selectedDeployment) {
+        alert('Please select a deployment option');
+        return;
+      }
+      showStage('stage5b');
+    }
+
+    function saveLeadAndContinue() {
+      const email = document.getElementById('leadEmail').value.trim();
+      if (!email) {
+        alert('Please enter your email');
+        return;
+      }
+      
+      const company = document.getElementById('leadCompany').value.trim();
+      const phone = document.getElementById('leadPhone').value.trim();
+      const challenge = document.getElementById('leadChallenge').value.trim();
+      
+      // Save lead data to window for later use
+      window.leadData = {
+        email: email,
+        company: company || 'Not provided',
+        phone: phone || 'Not provided',
+        challenge: challenge || 'Not provided',
+        deployment: window.selectedDeployment
+      };
+      
+      // After lead capture, go to pricing
+      showStage('stage7');
+    }
+
+    function proceedToCheckout() {
+      // After pricing selection, go to setup
+      if (window.selectedDeployment === 'website') {
+        showStage('stage6a');
+      } else if (window.selectedDeployment === 'whatsapp') {
+        showStage('stage6b');
+      }
+    }
+
+    function selectPlan(plan) {
+      window.selectedPlan = plan;
+      
+      // Reset all checkmarks
+      document.getElementById('checkLite').textContent = '';
+      document.getElementById('checkStandard').textContent = '✓';
+      document.getElementById('checkPro').textContent = '';
+      
+      // Reset all card styles
+      document.getElementById('planLite').style.borderColor = 'var(--border-light)';
+      document.getElementById('planLite').style.background = 'transparent';
+      document.getElementById('planStandard').style.borderColor = 'var(--purple)';
+      document.getElementById('planStandard').style.background = 'rgba(124, 58, 237, 0.05)';
+      document.getElementById('planPro').style.borderColor = 'var(--border-light)';
+      document.getElementById('planPro').style.background = 'transparent';
+      
+      // Update checkmarks and styling based on selection
+      if (plan === 'lite') {
+        document.getElementById('checkLite').innerHTML = '✓';
+        document.getElementById('checkLite').style.backgroundColor = 'var(--text-secondary)';
+        document.getElementById('checkLite').style.borderColor = 'var(--text-secondary)';
+        document.getElementById('checkLite').style.color = 'white';
+        document.getElementById('planLite').style.borderColor = 'var(--text-secondary)';
+        document.getElementById('checkStandard').textContent = '';
+        document.getElementById('checkStandard').style.backgroundColor = 'transparent';
+      } else if (plan === 'standard') {
+        document.getElementById('checkStandard').innerHTML = '✓';
+        document.getElementById('checkStandard').style.backgroundColor = 'var(--purple)';
+        document.getElementById('checkStandard').style.borderColor = 'var(--purple)';
+        document.getElementById('checkStandard').style.color = 'white';
+        document.getElementById('planStandard').style.borderColor = 'var(--purple)';
+        document.getElementById('checkLite').textContent = '';
+        document.getElementById('checkLite').style.backgroundColor = 'transparent';
+      } else if (plan === 'pro') {
+        document.getElementById('checkPro').innerHTML = '✓';
+        document.getElementById('checkPro').style.backgroundColor = 'var(--text-secondary)';
+        document.getElementById('checkPro').style.borderColor = 'var(--text-secondary)';
+        document.getElementById('checkPro').style.color = 'white';
+        document.getElementById('planPro').style.borderColor = 'var(--text-secondary)';
+        document.getElementById('checkStandard').textContent = '';
+        document.getElementById('checkStandard').style.backgroundColor = 'transparent';
+      }
+      
+      // Enable Continue button
+      const continueBtn = document.getElementById('continueFromPricingBtn');
+      continueBtn.style.opacity = '1';
+      continueBtn.style.cursor = 'pointer';
+      
+      window.scrollTo(0, 0);
+    }
+
+    function copyEmbedCode() {
+      const code = '<script src="https://cdn.zuri.chat/embed.js?session=ABC123XYZ"><\/script>';
+      navigator.clipboard.writeText(code);
+      alert('Code copied to clipboard!');
+    }
+
+    function completeDeployment() {
+      try {
+        // Set deployment name for Stage 8
+        const deploymentNames = {
+          'website': 'Website',
+          'whatsapp': 'WhatsApp',
+          'slack': 'Slack',
+          'zendesk': 'Zendesk',
+          'custom': 'Custom'
+        };
+        const deploymentName = deploymentNames[window.selectedDeployment || 'website'];
+        const stage8DeploymentEl = document.getElementById('stage8DeploymentName');
+        if (stage8DeploymentEl) {
+          stage8DeploymentEl.textContent = deploymentName;
+        }
+        
+        // Generate shareable demo URL
+        const companyName = (window.leadData?.company || 'Jefferson Cleaners').toLowerCase().replace(/\s+/g, '-');
+        const demoUrlEl = document.getElementById('demoShareUrl');
+        if (demoUrlEl) {
+          demoUrlEl.value = `zuri.chat/demo/${companyName}`;
+        }
+        
+        // Show Stage 8
+        showStage('stage8');
+      } catch (err) {
+        console.error('Error in completeDeployment:', err);
+      }
+    }
+
+    function copyDemoUrl() {
+      const url = document.getElementById('demoShareUrl');
+      url.select();
+      navigator.clipboard.writeText(url.value);
+      const btn = event.target;
+      const originalText = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => {
+        btn.textContent = originalText;
+      }, 2000);
+    }
+
+    function goToDashboard() {
+      document.getElementById('progressDots').parentElement.style.display = 'none';
+      document.getElementById('flowHelpBtn').style.display = 'none';
+      document.getElementById('exitBtn').style.display = 'none';
+      document.getElementById('settingsBtn').style.display = 'inline-block';
+      document.getElementById('logoutBtn').style.display = 'inline-block';
+      showStage('dashboard');
+    }
+
+    function viewLeadTranscript(leadName) {
+      alert(`Viewing full transcript for ${leadName}\n\nFull conversation history, sentiment analysis, and action items would appear here in the production version.`);
+    }
+
+    function resyncKnowledgeBase() {
+      const btn = event.target;
+      btn.disabled = true;
+      btn.textContent = 'Syncing...';
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = 'Re-sync';
+        alert('Knowledge base synced! 14 pages indexed from jeffersonscleaners.com');
+      }, 1500);
+    }
+
+    function customizeResponses() {
+      alert('Customize Responses\n\nEdit bot tone, response templates, and fallback messages.');
+    }
+
+    function viewAllLeads() {
+      alert('View All Leads\n\nFull leads inbox with filtering, search, and bulk actions.');
+    }
+
+    function inviteTeam() {
+      alert('Invite Team\n\nInvite team members to manage leads, replies, and bot settings.');
+    }
+
+    function connectCRM() {
+      alert('Connect CRM\n\nSync leads to Salesforce, HubSpot, Pipedrive, or custom webhooks.');
+    }
+
+    function viewLiveBot() {
+      alert('View Live Bot\n\nOpens your live bot in a new window. In production, this would show the deployed bot widget.');
+    }
+
+    function goBackToPricing() {
+      document.getElementById('stage6a').style.display = 'none';
+      document.getElementById('stage6b').style.display = 'none';
+      document.getElementById('stage7').style.display = 'block';
+      window.scrollTo(0, 0);
+    }
+
+
+
+    function sendSampleQuestion(question) {
+      document.getElementById('chatInput').value = question;
+      sendMessage();
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      const messagesDiv = document.getElementById('chatMessages');
+      const userMsg = document.createElement('div');
+      userMsg.className = 'chat-bubble user';
+      userMsg.textContent = msg;
+      messagesDiv.appendChild(userMsg);
+      input.value = '';
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+
+
+      setTimeout(() => {
+        const botMsg = document.createElement('div');
+        botMsg.className = 'chat-bubble bot';
+        
+        const avatar = document.createElement('div');
+        avatar.className = 'bot-avatar';
+        avatar.textContent = 'JC';
+        
+        const textWrapper = document.createElement('div');
+        textWrapper.className = 'bot-message-text';
+        
+        const responses = {
+          'hours': 'We\'re open Monday-Friday 8am-6pm, Saturday 9am-4pm. Closed Sundays. Pickup and drop-off available during business hours.',
+          'drop': 'You can drop off at our location or schedule a free pickup. Most orders are ready in 24-48 hours. Express service available for an extra $5.',
+          'pricing': 'Standard cleaning is $1.50/lb. Express (24hr) adds $5. Alterations start at $15. First-time customers get 15% off.',
+          'book': 'I can help you schedule a pickup or drop-off. What day works best for you? We\'re flexible with same-day service.',
+          'default': 'That\'s a great question! For more help, call us at (555) 123-4567 or email hello@jeffersoncleaners.com. We\'re always happy to help!'
+        };
+        const keyword = msg.toLowerCase();
+        let response = responses['default'];
+        if (keyword.includes('hour') || keyword.includes('open') || keyword.includes('time')) response = responses['hours'];
+        if (keyword.includes('drop') || keyword.includes('service')) response = responses['drop'];
+        if (keyword.includes('pricing') || keyword.includes('cost') || keyword.includes('price') || keyword.includes('much')) response = responses['pricing'];
+        if (keyword.includes('book') || keyword.includes('online') || keyword.includes('schedule')) response = responses['book'];
+        
+        textWrapper.textContent = response;
+        botMsg.appendChild(avatar);
+        botMsg.appendChild(textWrapper);
+        messagesDiv.appendChild(botMsg);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }, 800);
+    }
+
+    function deployBot() {
+      document.getElementById('stripeModal').classList.add('active');
+    }
+
+    function closeStripe() {
+      document.getElementById('stripeModal').classList.remove('active');
+    }
+
+    function processPayment() {
+      closeStripe();
+      setTimeout(() => {
+        document.getElementById('successModal').classList.add('active');
+      }, 300);
+    }
+
+    // Landing page help widget
+    function toggleLandingHelp() {
+      const chat = document.getElementById('landingHelpChat');
+      chat.style.display = chat.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function askLandingHelp(question) {
+      const answers = {
+        'What\'s included in Standard?': 'Standard includes 5K monthly leads, Website + WhatsApp deployment, lead analytics, and Slack support. Plus a 14-day free trial.',
+        'How long does setup take?': 'Less than 10 minutes. Enter your URL, customize your bot, choose where to deploy, and you\'re live. That\'s it!'
+      };
+      alert(answers[question] || 'Great question! Email hello@zuri.chat for more.');
+    }
+
+    // Flow help panel
+    function toggleFlowHelp() {
+      const panel = document.getElementById('flowHelpPanel');
+      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function showFlowHelp(topic) {
+      const answers = {
+        'What is this step for?': 'This helps us customize your bot to match your brand and business needs.',
+        'Can I skip this?': 'No, but it only takes a minute. We need this info to make your bot effective.',
+        'What happens next?': 'After this step, you\'ll test your bot in action. Then you\'ll deploy it and start capturing leads.',
+        'Talk to support': 'Email hello@zuri.chat or call (555) 123-4567. Our team is here to help!'
+      };
+      alert(answers[topic] || 'Good question! Our support team at hello@zuri.chat can help.');
+      toggleFlowHelp();
+    }
+
+    // Initialize with website deployment selected by default
+    document.addEventListener('DOMContentLoaded', function() {
+      window.selectedDeployment = 'website';
+      if (document.getElementById('deploymentWebsite')) {
+        document.getElementById('deploymentWebsite').style.borderColor = 'var(--purple)';
+        document.getElementById('deploymentWebsite').style.background = 'rgba(124, 58, 237, 0.05)';
+      }
+      
+      // Pre-select Standard plan by default
+      window.selectedPlan = 'standard';
+      if (document.getElementById('continueFromPricingBtn')) {
+        document.getElementById('continueFromPricingBtn').style.opacity = '1';
+        document.getElementById('continueFromPricingBtn').style.cursor = 'pointer';
+      }
+    });
+
+  </script>
+
+</body>
+</html>
